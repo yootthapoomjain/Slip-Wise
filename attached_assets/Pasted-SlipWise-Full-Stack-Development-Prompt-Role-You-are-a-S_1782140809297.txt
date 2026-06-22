@@ -1,0 +1,463 @@
+SlipWise – Full Stack Development Prompt
+
+Role
+
+You are a Senior Full Stack Engineer, Mobile UX Designer, Database Architect, AI Engineer, Security Engineer, and Product Manager.
+
+Build a production-ready expense tracking Progressive Web App (PWA) called SlipWise.
+
+The application must be beautiful, secure, scalable, responsive, and optimized for iPhone, iPad, Android, and Desktop.
+
+⸻
+
+Tech Stack
+
+Frontend
+
+* React 19
+* TypeScript
+* Vite
+* Tailwind CSS
+* shadcn/ui
+* Framer Motion
+* React Router
+* React Hook Form
+* Zod
+* TanStack Query
+
+Backend
+
+* Supabase
+* PostgreSQL
+* Supabase Auth
+* Supabase Storage
+* Row Level Security (RLS)
+
+OCR
+
+* Tesseract.js
+
+Charts
+
+* Recharts
+
+Icons
+
+* Lucide React
+
+Theme
+
+* Dark Mode
+* Light Mode
+
+Deployment
+
+* Replit Deployments
+
+⸻
+
+Theme
+
+Primary
+
+#2563EB
+
+Secondary
+
+#60A5FA
+
+Background
+
+#F8FAFC
+
+Dark Background
+
+#0F172A
+
+Rounded
+
+24px
+
+Glassmorphism
+
+Soft Shadows
+
+Premium Minimal Design
+
+Apple-inspired UI
+
+⸻
+
+Authentication
+
+Support
+
+* Email
+* Google Login
+* Forgot Password
+* Profile
+* Avatar Upload
+
+⸻
+
+Dashboard
+
+Display
+
+Monthly Spending
+
+Today’s Spending
+
+Weekly Spending
+
+Remaining Budget
+
+Recent Transactions
+
+Expense Chart
+
+Category Chart
+
+Top Categories
+
+Quick Add Button
+
+⸻
+
+Expense Management
+
+User can
+
+Add Expense
+
+Edit Expense
+
+Delete Expense
+
+Search
+
+Filter
+
+Sort
+
+Categories
+
+Date Range
+
+Tags
+
+Notes
+
+Receipt Image
+
+⸻
+
+OCR Slip Scanner
+
+User selects image from gallery.
+
+System reads the receipt using OCR.
+
+Extract
+
+Merchant
+
+Amount
+
+Date
+
+Time
+
+Reference Number
+
+Payment Method
+
+Preview extracted data before saving.
+
+Allow manual editing.
+
+Save to database.
+
+⸻
+
+Categories
+
+Food
+
+Drink
+
+Coffee
+
+Transport
+
+Shopping
+
+Health
+
+Education
+
+Bills
+
+Entertainment
+
+Travel
+
+Salary
+
+Other
+
+Allow custom categories.
+
+⸻
+
+Reports
+
+Daily
+
+Weekly
+
+Monthly
+
+Yearly
+
+Charts
+
+Pie Chart
+
+Bar Chart
+
+Line Chart
+
+Export PDF
+
+Export Excel
+
+CSV Export
+
+⸻
+
+Budget
+
+Monthly Budget
+
+Category Budget
+
+Progress Bar
+
+Budget Alerts
+
+Overspending Warning
+
+Savings Goal
+
+⸻
+
+Search
+
+Search by
+
+Merchant
+
+Amount
+
+Category
+
+Date
+
+Keyword
+
+⸻
+
+Notification
+
+Budget Alert
+
+Daily Reminder
+
+Weekly Summary
+
+Monthly Summary
+
+⸻
+
+Settings
+
+Language
+
+Currency
+
+Dark Mode
+
+Theme
+
+Notification
+
+Export Data
+
+Delete Account
+
+Privacy
+
+⸻
+
+Security
+
+HTTPS
+
+Supabase Auth
+
+RLS Policies
+
+Encrypted Storage
+
+Secure API
+
+Input Validation
+
+XSS Protection
+
+CSRF Protection
+
+SQL Injection Protection
+
+⸻
+
+Database Schema
+
+profiles
+
+id
+
+name
+
+email
+
+avatar
+
+created_at
+
+expenses
+
+id
+
+user_id
+
+merchant
+
+amount
+
+category
+
+date
+
+time
+
+payment_method
+
+reference
+
+note
+
+image_url
+
+created_at
+
+budgets
+
+id
+
+user_id
+
+category
+
+budget
+
+month
+
+goals
+
+id
+
+user_id
+
+title
+
+target
+
+current
+
+deadline
+
+⸻
+
+UI
+
+Smooth animations
+
+Floating Action Button
+
+Sticky Bottom Navigation
+
+Responsive Layout
+
+Loading Skeleton
+
+Empty State
+
+Success Toast
+
+Error Toast
+
+Confirmation Dialog
+
+Swipe Actions
+
+Modern Cards
+
+Gradient Buttons
+
+Premium Typography
+
+⸻
+
+Performance
+
+Lighthouse 95+
+
+Lazy Loading
+
+Image Compression
+
+Route Splitting
+
+Code Splitting
+
+Caching
+
+Fast Rendering
+
+Offline Support
+
+PWA Installable
+
+⸻
+
+Accessibility
+
+Keyboard Navigation
+
+ARIA Labels
+
+Color Contrast
+
+Screen Reader Support
+
+Focus States
+
+⸻
+
+Final Goal
+
+Deliver a production-ready, scalable, maintainable expense tracking application with premium UX/UI, clean architecture, and optimized performance.
+
+The app must feel comparable to top-tier finance apps while remaining simple and intuitive to use.

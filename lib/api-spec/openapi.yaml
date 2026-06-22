@@ -1,22 +1,35 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SlipWise expense tracking API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: profile
+    description: User profile operations
+  - name: expenses
+    description: Expense operations
+  - name: categories
+    description: Category operations
+  - name: budgets
+    description: Budget operations
+  - name: goals
+    description: Savings goal operations
+  - name: reports
+    description: Analytics and reporting
+  - name: receipts
+    description: Receipt upload
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +37,921 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── Profile ───────────────────────────────────────────────────────────────
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+    put:
+      operationId: upsertProfile
+      tags: [profile]
+      summary: Create or update profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileInput"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+
+  # ─── Expenses ──────────────────────────────────────────────────────────────
+  /expenses:
+    get:
+      operationId: listExpenses
+      tags: [expenses]
+      summary: List expenses with optional filters
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          schema:
+            type: string
+        - name: endDate
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: paymentMethod
+          in: query
+          schema:
+            type: string
+        - name: minAmount
+          in: query
+          schema:
+            type: number
+        - name: maxAmount
+          in: query
+          schema:
+            type: number
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [date, amount, merchant]
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of expenses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpenseList"
+    post:
+      operationId: createExpense
+      tags: [expenses]
+      summary: Create a new expense
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseInput"
+      responses:
+        "201":
+          description: Created expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+
+  /expenses/{id}:
+    get:
+      operationId: getExpense
+      tags: [expenses]
+      summary: Get a single expense
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateExpense
+      tags: [expenses]
+      summary: Update an expense
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseUpdate"
+      responses:
+        "200":
+          description: Updated expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+    delete:
+      operationId: deleteExpense
+      tags: [expenses]
+      summary: Delete an expense
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResult"
+
+  # ─── Categories ────────────────────────────────────────────────────────────
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List all categories (defaults + custom)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+    post:
+      operationId: createCategory
+      tags: [categories]
+      summary: Create a custom category
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryInput"
+      responses:
+        "201":
+          description: Created category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+
+  /categories/{id}:
+    delete:
+      operationId: deleteCategory
+      tags: [categories]
+      summary: Delete a custom category
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResult"
+
+  # ─── Budgets ───────────────────────────────────────────────────────────────
+  /budgets:
+    get:
+      operationId: listBudgets
+      tags: [budgets]
+      summary: List budgets (optionally by month)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: query
+          description: "Month in YYYY-MM format"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Budgets with spending progress
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BudgetWithProgress"
+    post:
+      operationId: createBudget
+      tags: [budgets]
+      summary: Create a budget
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetInput"
+      responses:
+        "201":
+          description: Created budget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Budget"
+
+  /budgets/{id}:
+    patch:
+      operationId: updateBudget
+      tags: [budgets]
+      summary: Update a budget
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetUpdate"
+      responses:
+        "200":
+          description: Updated budget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Budget"
+    delete:
+      operationId: deleteBudget
+      tags: [budgets]
+      summary: Delete a budget
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResult"
+
+  # ─── Goals ─────────────────────────────────────────────────────────────────
+  /goals:
+    get:
+      operationId: listGoals
+      tags: [goals]
+      summary: List savings goals
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Goals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Goal"
+    post:
+      operationId: createGoal
+      tags: [goals]
+      summary: Create a savings goal
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalInput"
+      responses:
+        "201":
+          description: Created goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+
+  /goals/{id}:
+    patch:
+      operationId: updateGoal
+      tags: [goals]
+      summary: Update a savings goal
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalUpdate"
+      responses:
+        "200":
+          description: Updated goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+    delete:
+      operationId: deleteGoal
+      tags: [goals]
+      summary: Delete a savings goal
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResult"
+
+  # ─── Reports / Analytics (wow endpoints) ────────────────────────────────────
+  /reports/dashboard:
+    get:
+      operationId: getDashboardSummary
+      tags: [reports]
+      summary: Dashboard summary — totals for today, week, month, and remaining budget
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: query
+          description: "Month in YYYY-MM format (defaults to current month)"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /reports/by-category:
+    get:
+      operationId: getSpendingByCategory
+      tags: [reports]
+      summary: Spending grouped by category for a period
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+        - name: endDate
+          in: query
+          schema:
+            type: string
+        - name: month
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Spending by category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategorySpend"
+
+  /reports/by-period:
+    get:
+      operationId: getSpendingByPeriod
+      tags: [reports]
+      summary: Spending grouped by day/week/month
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: granularity
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [daily, weekly, monthly]
+        - name: startDate
+          in: query
+          schema:
+            type: string
+        - name: endDate
+          in: query
+          schema:
+            type: string
+        - name: year
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Spending over time
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PeriodSpend"
+
+  /reports/top-merchants:
+    get:
+      operationId: getTopMerchants
+      tags: [reports]
+      summary: Top merchants by spend
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Top merchants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MerchantSpend"
+
+  # ─── Receipt upload ────────────────────────────────────────────────────────
+  /receipts/upload:
+    post:
+      operationId: uploadReceipt
+      tags: [receipts]
+      summary: Upload a receipt image and get back a URL
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReceiptUpload"
+      responses:
+        "200":
+          description: Uploaded receipt URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptUploadResult"
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    DeleteResult:
+      type: object
+      required: [success]
+      properties:
+        success:
+          type: boolean
+
+    # ─── Profile ──────────────────────────────────────────────────────────────
+    Profile:
+      type: object
+      required: [id, clerkUserId, name, email, currency, createdAt]
+      properties:
+        id:
+          type: integer
+        clerkUserId:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: ["string", "null"]
+        currency:
+          type: string
+        language:
+          type: ["string", "null"]
+        darkMode:
+          type: boolean
+        createdAt:
+          type: string
+
+    ProfileInput:
+      type: object
+      required: [name, email]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+        currency:
+          type: string
+        language:
+          type: string
+        darkMode:
+          type: boolean
+
+    # ─── Expense ──────────────────────────────────────────────────────────────
+    Expense:
+      type: object
+      required: [id, clerkUserId, merchant, amount, category, date, createdAt]
+      properties:
+        id:
+          type: integer
+        clerkUserId:
+          type: string
+        merchant:
+          type: string
+        amount:
+          type: number
+        category:
+          type: string
+        date:
+          type: string
+        time:
+          type: ["string", "null"]
+        paymentMethod:
+          type: ["string", "null"]
+        reference:
+          type: ["string", "null"]
+        note:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        tags:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ExpenseList:
+      type: object
+      required: [data, total]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Expense"
+        total:
+          type: integer
+
+    ExpenseInput:
+      type: object
+      required: [merchant, amount, category, date]
+      properties:
+        merchant:
+          type: string
+        amount:
+          type: number
+        category:
+          type: string
+        date:
+          type: string
+        time:
+          type: string
+        paymentMethod:
+          type: string
+        reference:
+          type: string
+        note:
+          type: string
+        imageUrl:
+          type: string
+        tags:
+          type: string
+
+    ExpenseUpdate:
+      type: object
+      properties:
+        merchant:
+          type: string
+        amount:
+          type: number
+        category:
+          type: string
+        date:
+          type: string
+        time:
+          type: string
+        paymentMethod:
+          type: string
+        reference:
+          type: string
+        note:
+          type: string
+        imageUrl:
+          type: string
+        tags:
+          type: string
+
+    # ─── Category ─────────────────────────────────────────────────────────────
+    Category:
+      type: object
+      required: [id, name, icon, isDefault]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        icon:
+          type: string
+        color:
+          type: ["string", "null"]
+        isDefault:
+          type: boolean
+        clerkUserId:
+          type: ["string", "null"]
+
+    CategoryInput:
+      type: object
+      required: [name, icon]
+      properties:
+        name:
+          type: string
+        icon:
+          type: string
+        color:
+          type: string
+
+    # ─── Budget ───────────────────────────────────────────────────────────────
+    Budget:
+      type: object
+      required: [id, clerkUserId, category, budget, month]
+      properties:
+        id:
+          type: integer
+        clerkUserId:
+          type: string
+        category:
+          type: string
+        budget:
+          type: number
+        month:
+          type: string
+
+    BudgetWithProgress:
+      type: object
+      required: [id, clerkUserId, category, budget, month, spent, remaining, percentage]
+      properties:
+        id:
+          type: integer
+        clerkUserId:
+          type: string
+        category:
+          type: string
+        budget:
+          type: number
+        month:
+          type: string
+        spent:
+          type: number
+        remaining:
+          type: number
+        percentage:
+          type: number
+
+    BudgetInput:
+      type: object
+      required: [category, budget, month]
+      properties:
+        category:
+          type: string
+        budget:
+          type: number
+        month:
+          type: string
+
+    BudgetUpdate:
+      type: object
+      properties:
+        category:
+          type: string
+        budget:
+          type: number
+        month:
+          type: string
+
+    # ─── Goal ─────────────────────────────────────────────────────────────────
+    Goal:
+      type: object
+      required: [id, clerkUserId, title, target, current, createdAt]
+      properties:
+        id:
+          type: integer
+        clerkUserId:
+          type: string
+        title:
+          type: string
+        target:
+          type: number
+        current:
+          type: number
+        deadline:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    GoalInput:
+      type: object
+      required: [title, target]
+      properties:
+        title:
+          type: string
+        target:
+          type: number
+        current:
+          type: number
+        deadline:
+          type: string
+
+    GoalUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        target:
+          type: number
+        current:
+          type: number
+        deadline:
+          type: string
+
+    # ─── Reports ──────────────────────────────────────────────────────────────
+    DashboardSummary:
+      type: object
+      required: [todaySpend, weekSpend, monthSpend, monthBudget, budgetRemaining, recentExpenses, topCategories]
+      properties:
+        todaySpend:
+          type: number
+        weekSpend:
+          type: number
+        monthSpend:
+          type: number
+        monthBudget:
+          type: number
+        budgetRemaining:
+          type: number
+        budgetPercentage:
+          type: number
+        recentExpenses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Expense"
+        topCategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategorySpend"
+
+    CategorySpend:
+      type: object
+      required: [category, amount, count, percentage]
+      properties:
+        category:
+          type: string
+        amount:
+          type: number
+        count:
+          type: integer
+        percentage:
+          type: number
+        icon:
+          type: ["string", "null"]
+        color:
+          type: ["string", "null"]
+
+    PeriodSpend:
+      type: object
+      required: [period, amount, count]
+      properties:
+        period:
+          type: string
+        amount:
+          type: number
+        count:
+          type: integer
+
+    MerchantSpend:
+      type: object
+      required: [merchant, amount, count]
+      properties:
+        merchant:
+          type: string
+        amount:
+          type: number
+        count:
+          type: integer
+
+    # ─── Receipt ──────────────────────────────────────────────────────────────
+    ReceiptUpload:
+      type: object
+      required: [imageBase64]
+      properties:
+        imageBase64:
+          type: string
+          description: Base64-encoded image data
+
+    ReceiptUploadResult:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
