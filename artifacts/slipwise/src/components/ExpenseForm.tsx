@@ -34,7 +34,9 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 
-import { CalendarIcon, Camera, Loader2, Upload, ScanLine } from "lucide-react";
+import { CalendarIcon, Camera, Loader2, Upload, ScanLine, Info } from "lucide-react";
+import { usePreferences } from "@/contexts/PreferencesContext";
+import { parseThaiOcr, getCurrencySymbol, formatDate } from "@/lib/format";
 
 const formSchema = z.object({
   merchant: z.string().min(1, "Merchant is required"),
@@ -59,16 +61,14 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t, currency, language, calendarEra } = usePreferences();
   
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [receiptImage, setReceiptImage] = useState<string | null>(initialData?.imageUrl || null);
+  const [ocrReview, setOcrReview] = useState<ReturnType<typeof parseThaiOcr> | null>(null);
 
-  const { data: categories, isLoading: isLoadingCategories } = useListCategories({}, {
-    query: {
-      queryKey: getListCategoriesQueryKey()
-    }
-  });
+  const { data: categories } = useListCategories({});
 
   const createExpense = useCreateExpense();
   const updateExpense = useUpdateExpense();
@@ -101,45 +101,35 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
     
     setIsScanning(true);
     setScanProgress(0);
+    setOcrReview(null);
     
     try {
-      const worker = await Tesseract.createWorker({
-        logger: m => {
-          if (m.status === 'recognizing text') {
-            setScanProgress(m.progress * 100);
-          }
-        }
-      });
+      const worker = await (Tesseract as any).createWorker();
       
       const { data: { text } } = await worker.recognize(receiptImage);
       await worker.terminate();
       
-      // Basic OCR parsing heuristic
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const result = parseThaiOcr(text);
+      setOcrReview(result);
       
-      if (lines.length > 0) {
-        // Merchant is usually the first line
-        const possibleMerchant = lines[0];
-        
-        // Find amount (look for $ or numbers with decimals)
-        const amountMatch = text.match(/\$?\s*(\d+\.\d{2})/);
-        const possibleAmount = amountMatch ? parseFloat(amountMatch[1]) : null;
-        
-        if (possibleMerchant && !form.getValues("merchant")) {
-          form.setValue("merchant", possibleMerchant);
-          toast({ title: "Merchant detected", description: possibleMerchant });
-        }
-        
-        if (possibleAmount && !form.getValues("amount")) {
-          form.setValue("amount", possibleAmount);
-          toast({ title: "Amount detected", description: `$${possibleAmount.toFixed(2)}` });
-        }
+      if (result.amount && !form.getValues("amount")) {
+        form.setValue("amount", result.amount);
+        toast({ title: t.expenses.amountDetected, description: `${getCurrencySymbol(currency)}${result.amount.toFixed(2)}` });
+      }
+      
+      if (result.merchant && !form.getValues("merchant")) {
+        form.setValue("merchant", result.merchant);
+        toast({ title: t.expenses.merchantDetected, description: result.merchant });
+      }
+
+      if (result.bank) {
+        toast({ title: t.ocr.bankName + ": " + result.bank });
       }
     } catch (error) {
       console.error("OCR Error:", error);
       toast({ 
-        title: "Scan failed", 
-        description: "Could not read text from the image.",
+        title: t.expenses.scanFailed, 
+        description: t.common.error,
         variant: "destructive"
       });
     } finally {
@@ -165,18 +155,18 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
           id: initialData.id,
           data
         });
-        toast({ title: "Expense updated" });
+        toast({ title: t.expenses.expenseUpdated });
       } else {
         await createExpense.mutateAsync({ data });
-        toast({ title: "Expense added" });
+        toast({ title: t.expenses.expenseAdded });
       }
       
       queryClient.invalidateQueries();
       setLocation("/expenses");
     } catch (error) {
       toast({ 
-        title: "Error saving expense", 
-        description: "Please try again.",
+        title: t.expenses.saveFailed, 
+        description: t.common.error,
         variant: "destructive"
       });
     }
@@ -188,7 +178,7 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
     <div className="space-y-6 max-w-md mx-auto animate-in fade-in duration-300 pb-8">
       {/* Receipt Scanner */}
       <div className="bg-card border border-border/50 rounded-3xl p-4 shadow-sm">
-        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 block">Receipt</Label>
+        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 block">{t.expenses.receipt}</Label>
         
         {receiptImage ? (
           <div className="space-y-3">
@@ -200,9 +190,12 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
                 variant="secondary" 
                 size="sm"
                 className="absolute bottom-2 right-2 rounded-xl backdrop-blur-md bg-white/20 text-white border-none hover:bg-white/30"
-                onClick={() => setReceiptImage(null)}
+                onClick={() => {
+                  setReceiptImage(null);
+                  setOcrReview(null);
+                }}
               >
-                Remove
+                {t.expenses.remove}
               </Button>
             </div>
             
@@ -216,15 +209,28 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
               {isScanning ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Scanning ({Math.round(scanProgress)}%)...
+                  {t.expenses.scanning} ({Math.round(scanProgress)}%)...
                 </>
               ) : (
                 <>
                   <ScanLine className="w-4 h-4 mr-2 text-primary" />
-                  Extract Details
+                  {t.expenses.extractDetails}
                 </>
               )}
             </Button>
+
+            {ocrReview && (
+              <div className="mt-4 p-3 bg-secondary/30 rounded-2xl border border-border/50 space-y-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <Info className="w-4 h-4 text-primary" />
+                  <span className="text-xs font-bold uppercase tracking-tight">{t.ocr.editBeforeSave}</span>
+                </div>
+                {ocrReview.bank && <div className="text-xs flex justify-between"><span>{t.ocr.bankName}</span><span className="font-medium">{ocrReview.bank}</span></div>}
+                {ocrReview.sender && <div className="text-xs flex justify-between"><span>{t.ocr.sender}</span><span className="font-medium">{ocrReview.sender}</span></div>}
+                {ocrReview.receiver && <div className="text-xs flex justify-between"><span>{t.ocr.receiver}</span><span className="font-medium">{ocrReview.receiver}</span></div>}
+                {ocrReview.reference && <div className="text-xs flex justify-between"><span>{t.ocr.reference}</span><span className="font-medium truncate ml-4">{ocrReview.reference}</span></div>}
+              </div>
+            )}
           </div>
         ) : (
           <div 
@@ -234,8 +240,8 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
               <Camera className="w-5 h-5 text-primary" />
             </div>
-            <p className="text-sm font-medium">Add a receipt</p>
-            <p className="text-xs text-muted-foreground mt-1">Tap to upload or take a photo</p>
+            <p className="text-sm font-medium">{t.expenses.addReceipt}</p>
+            <p className="text-xs text-muted-foreground mt-1">{t.expenses.tapToUpload}</p>
             <input 
               type="file" 
               ref={fileInputRef} 
@@ -251,9 +257,9 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="bg-card border border-border/50 rounded-3xl p-5 shadow-sm space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="amount" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Amount</Label>
+            <Label htmlFor="amount" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t.expenses.amount}</Label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-semibold text-muted-foreground">$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-semibold text-muted-foreground">{getCurrencySymbol(currency)}</span>
               <Input 
                 id="amount" 
                 type="number" 
@@ -263,26 +269,26 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
               />
             </div>
             {form.formState.errors.amount && (
-              <p className="text-sm text-destructive">{form.formState.errors.amount.message}</p>
+              <p className="text-sm text-destructive">{t.expenses.amountRequired}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="merchant" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Merchant</Label>
+            <Label htmlFor="merchant" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t.expenses.merchant}</Label>
             <Input 
               id="merchant" 
               className="h-12 rounded-xl bg-secondary/50 border-transparent focus-visible:bg-transparent font-medium" 
-              placeholder="e.g. Starbucks"
+              placeholder={t.expenses.merchant}
               {...form.register("merchant")} 
             />
             {form.formState.errors.merchant && (
-              <p className="text-sm text-destructive">{form.formState.errors.merchant.message}</p>
+              <p className="text-sm text-destructive">{t.expenses.merchantRequired}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Category</Label>
-            {isLoadingCategories ? (
+            <Label htmlFor="category" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t.expenses.category}</Label>
+            {!categories ? (
               <Skeleton className="h-12 w-full rounded-xl" />
             ) : (
               <Select 
@@ -290,7 +296,7 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
                 onValueChange={(value) => form.setValue("category", value)}
               >
                 <SelectTrigger className="h-12 rounded-xl bg-secondary/50 border-transparent focus-visible:bg-transparent font-medium">
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder={t.expenses.selectCategory} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
                   {categories?.map((cat) => (
@@ -300,12 +306,12 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
               </Select>
             )}
             {form.formState.errors.category && (
-              <p className="text-sm text-destructive">{form.formState.errors.category.message}</p>
+              <p className="text-sm text-destructive">{t.expenses.categoryRequired}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Date</Label>
+            <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t.expenses.date}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -313,7 +319,7 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
                   className="w-full justify-start text-left font-medium h-12 rounded-xl bg-secondary/50 border-transparent hover:bg-secondary"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />
-                  {form.watch("date") ? format(form.watch("date"), "PPP") : <span>Pick a date</span>}
+                  {form.watch("date") ? formatDate(form.watch("date"), { language, era: calendarEra, format: 'long' }) : <span>{t.expenses.pickDate}</span>}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 rounded-2xl" align="start">
@@ -329,11 +335,11 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="note" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Note (Optional)</Label>
+            <Label htmlFor="note" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t.expenses.note} {t.common.optional}</Label>
             <Textarea 
               id="note" 
               className="resize-none rounded-xl bg-secondary/50 border-transparent focus-visible:bg-transparent font-medium min-h-[80px]" 
-              placeholder="Add details..."
+              placeholder={t.expenses.addDetails}
               {...form.register("note")} 
             />
           </div>
@@ -345,7 +351,7 @@ export function ExpenseForm({ initialData, isEdit }: ExpenseFormProps) {
           disabled={isPending}
         >
           {isPending && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
-          {isEdit ? "Save Changes" : "Save Expense"}
+          {isEdit ? t.expenses.saveChanges : t.expenses.saveExpense}
         </Button>
       </form>
     </div>

@@ -1,0 +1,2 @@
+- [SlipWise Clerk import fix](slipwise-clerk.md) — `@clerk/react/internal` doesn't exist; use `import.meta.env.VITE_CLERK_PUBLISHABLE_KEY` directly
+- [SlipWise i18n + preferences](slipwise-i18n.md) — Thai/English i18n + currency/era prefs live in PreferencesContext; Thai categories in DB need reset when re-seeding

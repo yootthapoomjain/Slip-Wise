@@ -1,0 +1,209 @@
+SlipWise v2 Premium UI/UX Upgrade (Thai + English)
+
+Upgrade the application into a production-ready personal finance app comparable to Wallet, Money Lover, and Spendee.
+
+Languages
+
+Support multilingual UI with language switching.
+
+Default Language:
+
+* Thai (ไทย)
+
+Optional:
+
+* English
+
+Translate every screen, button, menu, dialog, notification, and error message.
+
+Currency
+
+Default Currency:
+
+* Thai Baht (THB)
+
+Display format:
+
+* ฿1,250.00
+* ฿25.00
+* ฿10,000.00
+
+Allow users to change currency in Settings.
+
+Supported currencies:
+
+* THB
+* USD
+* EUR
+* GBP
+* JPY
+* SGD
+
+Date & Time
+
+Support Thai regional format.
+
+Examples:
+
+* 22 มิถุนายน 2026
+* 22 มิ.ย. 2569
+* 22/06/2026
+
+Allow switching between:
+
+* Buddhist Era (พ.ศ.)
+* Gregorian (ค.ศ.)
+
+OCR Receipt/Slip
+
+Optimize OCR for Thai banks.
+
+Recognize slips from:
+
+* Bangkok Bank
+* KBank (Kasikornbank)
+* SCB
+* Krungthai
+* Krungsri
+* TTB
+* UOB Thailand
+* Government Savings Bank
+* BAAC
+* CIMB Thai
+* LH Bank
+* KKP
+* ICBC Thailand
+
+Extract automatically:
+
+* Amount
+* Date
+* Time
+* Merchant
+* Receiver
+* Sender
+* Reference Number
+* Bank Name
+
+Users can edit extracted information before saving.
+
+Dashboard
+
+Show:
+
+* Total spending today
+* This week
+* This month
+* This year
+
+Display in Thai Baht by default.
+
+Charts:
+
+* Pie Chart
+* Monthly Bar Chart
+* Category Breakdown
+
+Categories
+
+Default Thai Categories:
+
+🍜 อาหาร
+☕ เครื่องดื่ม
+🛒 ช้อปปิ้ง
+🚗 เดินทาง
+🏠 บ้าน
+💡 ค่าสาธารณูปโภค
+🎮 บันเทิง
+🏥 สุขภาพ
+🎓 การศึกษา
+💼 งาน
+💰 เงินเดือน
+📈 การลงทุน
+🎁 ของขวัญ
+📦 อื่นๆ
+
+Users can create unlimited custom categories.
+
+Budget
+
+Monthly budget.
+
+Notify when spending reaches:
+
+* 50%
+* 80%
+* 100%
+
+Reports
+
+Generate:
+
+* Daily Report
+* Weekly Report
+* Monthly Report
+* Yearly Report
+
+Export:
+
+* PDF
+* CSV
+* Excel
+
+Premium
+
+Free Plan
+
+* Unlimited manual expenses
+* OCR 30 scans/month
+* Dashboard
+* Reports
+* Budget
+* Cloud Sync
+
+Premium
+
+* Unlimited OCR
+* AI Spending Insights
+* Unlimited Export
+* Unlimited Cloud Backup
+* Smart Categories
+* Advanced Analytics
+* Family Sharing
+* Multi-device Sync
+
+Design
+
+Premium Apple-quality UI
+
+* Glassmorphism
+* Dark Mode
+* Light Mode
+* Blue Gradient Theme
+* Rounded Corners
+* Smooth Animations
+* 60 FPS
+* Splash Screen
+* Skeleton Loading
+* Haptic Feedback
+* Responsive Design
+
+Security
+
+* Face ID / Fingerprint Login
+* PIN Lock
+* End-to-end encrypted cloud sync
+* Secure local storage
+
+Code Quality
+
+* TypeScript
+* React
+* Tailwind CSS
+* Clean Architecture
+* Responsive Design
+* Production Ready
+* No placeholder data
+* No console errors
+* Optimized Performance
+* Well-documented code

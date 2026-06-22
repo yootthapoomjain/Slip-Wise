@@ -3,21 +3,23 @@ import { Link, useLocation } from "wouter";
 import { Home, Receipt, PieChart, Target, Settings, Plus } from "lucide-react";
 import { useAuth } from "@clerk/react";
 import { Redirect } from "wouter";
+import { usePreferences } from "@/contexts/PreferencesContext";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
+  const { t } = usePreferences();
 
   if (isLoaded && !isSignedIn) {
     return <Redirect to="/sign-in" />;
   }
 
   const tabs = [
-    { name: "Home", path: "/", icon: Home },
-    { name: "Expenses", path: "/expenses", icon: Receipt },
-    { name: "Reports", path: "/reports", icon: PieChart },
-    { name: "Goals", path: "/goals", icon: Target },
-    { name: "Settings", path: "/settings", icon: Settings },
+    { name: t.nav.home, path: "/", icon: Home },
+    { name: t.nav.expenses, path: "/expenses", icon: Receipt },
+    { name: t.nav.reports, path: "/reports", icon: PieChart },
+    { name: t.nav.goals, path: "/goals", icon: Target },
+    { name: t.nav.settings, path: "/settings", icon: Settings },
   ];
 
   return (

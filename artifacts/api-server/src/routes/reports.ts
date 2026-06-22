@@ -41,13 +41,19 @@ router.get("/reports/dashboard", requireAuth(), async (req, res): Promise<void> 
   const weekRange = getWeekRange();
   const today = getTodayStr();
 
-  const [todayRows, weekRows, monthRows, budgetsRows, recentRows] = await Promise.all([
+  const year = new Date().getFullYear();
+  const yearStart = `${year}-01-01`;
+  const yearEnd = `${year}-12-31`;
+
+  const [todayRows, weekRows, monthRows, yearRows, budgetsRows, recentRows] = await Promise.all([
     db.select({ total: sum(expensesTable.amount) }).from(expensesTable)
       .where(and(eq(expensesTable.clerkUserId, userId), eq(expensesTable.date, today))),
     db.select({ total: sum(expensesTable.amount) }).from(expensesTable)
       .where(and(eq(expensesTable.clerkUserId, userId), gte(expensesTable.date, weekRange.start), lte(expensesTable.date, weekRange.end))),
     db.select({ total: sum(expensesTable.amount) }).from(expensesTable)
       .where(and(eq(expensesTable.clerkUserId, userId), gte(expensesTable.date, monthStart), lte(expensesTable.date, monthEnd))),
+    db.select({ total: sum(expensesTable.amount) }).from(expensesTable)
+      .where(and(eq(expensesTable.clerkUserId, userId), gte(expensesTable.date, yearStart), lte(expensesTable.date, yearEnd))),
     db.select({ total: sum(budgetsTable.budget) }).from(budgetsTable)
       .where(and(eq(budgetsTable.clerkUserId, userId), eq(budgetsTable.month, month))),
     db.select().from(expensesTable)
@@ -59,6 +65,7 @@ router.get("/reports/dashboard", requireAuth(), async (req, res): Promise<void> 
   const todaySpend = parseFloat(todayRows[0]?.total ?? "0");
   const weekSpend = parseFloat(weekRows[0]?.total ?? "0");
   const monthSpend = parseFloat(monthRows[0]?.total ?? "0");
+  const yearSpend = parseFloat(yearRows[0]?.total ?? "0");
   const monthBudget = parseFloat(budgetsRows[0]?.total ?? "0");
   const budgetRemaining = monthBudget - monthSpend;
   const budgetPercentage = monthBudget > 0 ? Math.min(100, (monthSpend / monthBudget) * 100) : 0;
@@ -87,6 +94,7 @@ router.get("/reports/dashboard", requireAuth(), async (req, res): Promise<void> 
     todaySpend,
     weekSpend,
     monthSpend,
+    yearSpend,
     monthBudget,
     budgetRemaining,
     budgetPercentage,

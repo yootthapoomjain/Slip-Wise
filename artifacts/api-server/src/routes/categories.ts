@@ -7,18 +7,20 @@ import { CreateCategoryBody } from "@workspace/api-zod";
 const router = Router();
 
 const DEFAULT_CATEGORIES = [
-  { name: "Food", icon: "utensils", color: "#f97316" },
-  { name: "Drink", icon: "coffee", color: "#8b5cf6" },
-  { name: "Coffee", icon: "cup-soda", color: "#a16207" },
-  { name: "Transport", icon: "car", color: "#3b82f6" },
-  { name: "Shopping", icon: "shopping-bag", color: "#ec4899" },
-  { name: "Health", icon: "heart-pulse", color: "#ef4444" },
-  { name: "Education", icon: "book-open", color: "#06b6d4" },
-  { name: "Bills", icon: "receipt", color: "#64748b" },
-  { name: "Entertainment", icon: "tv", color: "#f59e0b" },
-  { name: "Travel", icon: "plane", color: "#10b981" },
-  { name: "Salary", icon: "banknote", color: "#22c55e" },
-  { name: "Other", icon: "circle-ellipsis", color: "#94a3b8" },
+  { name: "🍜 อาหาร", icon: "utensils", color: "#f97316" },
+  { name: "☕ เครื่องดื่ม", icon: "coffee", color: "#8b5cf6" },
+  { name: "🛒 ช้อปปิ้ง", icon: "shopping-bag", color: "#ec4899" },
+  { name: "🚗 เดินทาง", icon: "car", color: "#3b82f6" },
+  { name: "🏠 บ้าน", icon: "home", color: "#a16207" },
+  { name: "💡 ค่าสาธารณูปโภค", icon: "zap", color: "#64748b" },
+  { name: "🎮 บันเทิง", icon: "gamepad-2", color: "#f59e0b" },
+  { name: "🏥 สุขภาพ", icon: "heart-pulse", color: "#ef4444" },
+  { name: "🎓 การศึกษา", icon: "book-open", color: "#06b6d4" },
+  { name: "💼 งาน", icon: "briefcase", color: "#6366f1" },
+  { name: "💰 เงินเดือน", icon: "banknote", color: "#22c55e" },
+  { name: "📈 การลงทุน", icon: "trending-up", color: "#10b981" },
+  { name: "🎁 ของขวัญ", icon: "gift", color: "#e879f9" },
+  { name: "📦 อื่นๆ", icon: "circle-ellipsis", color: "#94a3b8" },
 ];
 
 async function ensureDefaultCategories() {

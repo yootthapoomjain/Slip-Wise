@@ -3,7 +3,6 @@ import {
   getListExpensesQueryKey,
   useDeleteExpense
 } from "@workspace/api-client-react";
-import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Receipt, Search, Filter, Trash2, Edit2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -12,8 +11,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { usePreferences } from "@/contexts/PreferencesContext";
+import { formatCurrency, formatShortDate } from "@/lib/format";
 
 export default function Expenses() {
+  const { t, currency, language, calendarEra } = usePreferences();
   const { data, isLoading } = useListExpenses({ limit: 50 }, {
     query: {
       queryKey: getListExpensesQueryKey({ limit: 50 })
@@ -28,22 +30,22 @@ export default function Expenses() {
     try {
       await deleteExpense.mutateAsync({ id });
       queryClient.invalidateQueries({ queryKey: getListExpensesQueryKey() });
-      toast({ title: "Expense deleted" });
+      toast({ title: t.expenses.deleteSuccess });
     } catch (error) {
-      toast({ title: "Failed to delete expense", variant: "destructive" });
+      toast({ title: t.expenses.deleteFail, variant: "destructive" });
     }
   };
 
   return (
     <div className="space-y-6 pb-8 animate-in fade-in duration-300">
       <header className="pt-2">
-        <h1 className="text-2xl font-bold tracking-tight">Expenses</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t.expenses.title}</h1>
       </header>
 
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input placeholder="Search expenses..." className="pl-9 bg-card/80 backdrop-blur-md rounded-xl h-12" data-testid="input-search-expenses" />
+          <Input placeholder={t.expenses.searchPlaceholder} className="pl-9 bg-card/80 backdrop-blur-md rounded-xl h-12" data-testid="input-search-expenses" />
         </div>
         <Button variant="outline" size="icon" className="shrink-0 bg-card/80 backdrop-blur-md rounded-xl h-12 w-12" data-testid="button-filter-expenses">
           <Filter className="w-4 h-4" />
@@ -104,8 +106,8 @@ export default function Expenses() {
                     </div>
                     <div className="text-right flex items-center gap-3">
                       <div>
-                        <p className="font-bold text-base">${expense.amount.toFixed(2)}</p>
-                        <p className="text-xs font-medium text-muted-foreground">{format(new Date(expense.date), 'MMM d')}</p>
+                        <p className="font-bold text-base">{formatCurrency(expense.amount, currency)}</p>
+                        <p className="text-xs font-medium text-muted-foreground">{formatShortDate(expense.date, { language, era: calendarEra })}</p>
                       </div>
                       <Edit2 className="w-4 h-4 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -117,8 +119,8 @@ export default function Expenses() {
         ) : (
           <div className="text-center py-16">
             <Receipt className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-30" />
-            <h3 className="font-semibold text-lg">No expenses yet</h3>
-            <p className="text-sm text-muted-foreground mt-1 max-w-[200px] mx-auto">Tap the + button to add your first expense.</p>
+            <h3 className="font-semibold text-lg">{t.expenses.noExpenses}</h3>
+            <p className="text-sm text-muted-foreground mt-1 max-w-[200px] mx-auto">{t.expenses.addFirst}</p>
           </div>
         )}
       </div>

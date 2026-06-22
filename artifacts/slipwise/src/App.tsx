@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
 
 import { AppLayout } from "@/components/layout/AppLayout";
 import Dashboard from "@/pages/Dashboard";
@@ -17,6 +18,7 @@ import Reports from "@/pages/Reports";
 import Budgets from "@/pages/Budgets";
 import Goals from "@/pages/Goals";
 import Settings from "@/pages/Settings";
+import Premium from "@/pages/Premium";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -142,6 +144,9 @@ function ClerkProviderWithRoutes() {
           <Route path="/settings">
             <AppLayout><Settings /></AppLayout>
           </Route>
+          <Route path="/premium">
+            <AppLayout><Premium /></AppLayout>
+          </Route>
           <Route>
             <AppLayout>
               <div className="p-4 text-center mt-20">
@@ -158,12 +163,14 @@ function ClerkProviderWithRoutes() {
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="slipwise-theme">
-      <WouterRouter base={basePath}>
-        <TooltipProvider>
-          <ClerkProviderWithRoutes />
-          <Toaster />
-        </TooltipProvider>
-      </WouterRouter>
+      <PreferencesProvider>
+        <WouterRouter base={basePath}>
+          <TooltipProvider>
+            <ClerkProviderWithRoutes />
+            <Toaster />
+          </TooltipProvider>
+        </WouterRouter>
+      </PreferencesProvider>
     </ThemeProvider>
   );
 }
