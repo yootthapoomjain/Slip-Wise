@@ -4,6 +4,7 @@ title = "SlipWise"
 version = "1.0.0"
 id = "artifacts/slipwise"
 router = "path"
+hideBadge = true
 
 [[integratedSkills]]
 name = "react-vite"
