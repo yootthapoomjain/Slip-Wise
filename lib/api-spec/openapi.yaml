@@ -260,6 +260,31 @@ paths:
                 $ref: "#/components/schemas/Category"
 
   /categories/{id}:
+    put:
+      operationId: updateCategory
+      tags: [categories]
+      summary: Update a custom category
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryInput"
+      responses:
+        "200":
+          description: Updated category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
     delete:
       operationId: deleteCategory
       tags: [categories]
@@ -752,6 +777,8 @@ components:
           type: integer
         name:
           type: string
+        nameEn:
+          type: ["string", "null"]
         icon:
           type: string
         color:
@@ -766,6 +793,8 @@ components:
       required: [name, icon]
       properties:
         name:
+          type: string
+        nameEn:
           type: string
         icon:
           type: string

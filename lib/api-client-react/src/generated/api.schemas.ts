@@ -92,6 +92,8 @@ export interface ExpenseUpdate {
 export interface Category {
   id: number;
   name: string;
+  /** @nullable */
+  nameEn?: string | null;
   icon: string;
   /** @nullable */
   color?: string | null;
@@ -102,6 +104,7 @@ export interface Category {
 
 export interface CategoryInput {
   name: string;
+  nameEn?: string;
   icon: string;
   color?: string;
 }

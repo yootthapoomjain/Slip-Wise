@@ -1,6 +1,6 @@
 import { useUser, useClerk } from "@clerk/react";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, Moon, Sun, CreditCard, Languages, Calendar, Palette, Crown, ChevronRight } from "lucide-react";
+import { LogOut, User, CreditCard, Languages, Calendar, Palette, Crown, ChevronRight, Tag } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { usePreferences, Currency, CalendarEra } from "@/contexts/PreferencesContext";
 import { getCurrencyLabel } from "@/lib/format";
@@ -44,6 +44,22 @@ export default function Settings() {
             </div>
           </div>
           <ChevronRight className="w-5 h-5 opacity-50" />
+        </div>
+      </Link>
+
+      {/* Category Management link */}
+      <Link href="/categories">
+        <div className="bg-card border border-border/50 rounded-3xl p-4 flex items-center justify-between cursor-pointer hover:bg-secondary/50 transition-colors shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <Tag className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-semibold text-sm">{t.categoryManagement.manageCategories}</p>
+              <p className="text-xs text-muted-foreground">{t.categoryManagement.custom}</p>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
         </div>
       </Link>
 

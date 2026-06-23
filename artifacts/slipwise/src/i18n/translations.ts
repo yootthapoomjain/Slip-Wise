@@ -102,6 +102,34 @@ export interface Translations {
     gift: string;
     other: string;
   };
+  categoryManagement: {
+    title: string;
+    manageCategories: string;
+    defaults: string;
+    custom: string;
+    addCategory: string;
+    editCategory: string;
+    deleteCategory: string;
+    confirmDelete: string;
+    confirmDeleteDesc: string;
+    thaiName: string;
+    englishName: string;
+    icon: string;
+    color: string;
+    noCustom: string;
+    noCustomDesc: string;
+    addFirst: string;
+    defaultBadge: string;
+    cannotEditDefault: string;
+    saved: string;
+    deleted: string;
+    saveFailed: string;
+    deleteFailed: string;
+    pickIcon: string;
+    pickColor: string;
+    thaiNameRequired: string;
+    iconRequired: string;
+  };
   reports: {
     title: string;
     overview: string;
@@ -321,6 +349,34 @@ const th: Translations = {
     gift: "🎁 ของขวัญ",
     other: "📦 อื่นๆ",
   },
+  categoryManagement: {
+    title: "จัดการหมวดหมู่",
+    manageCategories: "จัดการหมวดหมู่",
+    defaults: "หมวดหมู่ค่าเริ่มต้น",
+    custom: "หมวดหมู่ของคุณ",
+    addCategory: "เพิ่มหมวดหมู่",
+    editCategory: "แก้ไขหมวดหมู่",
+    deleteCategory: "ลบหมวดหมู่",
+    confirmDelete: "ยืนยันการลบ",
+    confirmDeleteDesc: "คุณต้องการลบหมวดหมู่นี้ใช่ไหม?",
+    thaiName: "ชื่อภาษาไทย",
+    englishName: "ชื่อภาษาอังกฤษ",
+    icon: "ไอคอน",
+    color: "สี",
+    noCustom: "ยังไม่มีหมวดหมู่",
+    noCustomDesc: "สร้างหมวดหมู่เองเพื่อจัดระเบียบรายจ่าย",
+    addFirst: "เพิ่มหมวดหมู่แรก",
+    defaultBadge: "ค่าเริ่มต้น",
+    cannotEditDefault: "ไม่สามารถแก้ไขหมวดหมู่ค่าเริ่มต้นได้",
+    saved: "บันทึกหมวดหมู่แล้ว",
+    deleted: "ลบหมวดหมู่แล้ว",
+    saveFailed: "บันทึกไม่สำเร็จ",
+    deleteFailed: "ลบไม่สำเร็จ",
+    pickIcon: "เลือกไอคอน",
+    pickColor: "เลือกสี",
+    thaiNameRequired: "กรุณาใส่ชื่อภาษาไทย",
+    iconRequired: "กรุณาเลือกไอคอน",
+  },
   reports: {
     title: "รายงาน",
     overview: "ภาพรวม",
@@ -539,6 +595,34 @@ const en: Translations = {
     investment: "📈 Investment",
     gift: "🎁 Gift",
     other: "📦 Other",
+  },
+  categoryManagement: {
+    title: "Manage Categories",
+    manageCategories: "Manage Categories",
+    defaults: "Default Categories",
+    custom: "My Categories",
+    addCategory: "Add Category",
+    editCategory: "Edit Category",
+    deleteCategory: "Delete Category",
+    confirmDelete: "Confirm Delete",
+    confirmDeleteDesc: "Are you sure you want to delete this category?",
+    thaiName: "Thai Name",
+    englishName: "English Name",
+    icon: "Icon",
+    color: "Color",
+    noCustom: "No custom categories",
+    noCustomDesc: "Create your own categories to organize expenses",
+    addFirst: "Add First Category",
+    defaultBadge: "Default",
+    cannotEditDefault: "Default categories cannot be edited",
+    saved: "Category saved",
+    deleted: "Category deleted",
+    saveFailed: "Failed to save",
+    deleteFailed: "Failed to delete",
+    pickIcon: "Pick an icon",
+    pickColor: "Pick a color",
+    thaiNameRequired: "Thai name is required",
+    iconRequired: "Please pick an icon",
   },
   reports: {
     title: "Reports",

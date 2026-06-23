@@ -9,6 +9,8 @@
 export interface Category {
   id: number;
   name: string;
+  /** @nullable */
+  nameEn?: string | null;
   icon: string;
   /** @nullable */
   color?: string | null;

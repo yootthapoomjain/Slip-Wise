@@ -8,6 +8,7 @@
 
 export interface CategoryInput {
   name: string;
+  nameEn?: string;
   icon: string;
   color?: string;
 }

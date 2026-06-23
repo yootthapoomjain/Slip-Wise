@@ -190,6 +190,7 @@ export const DeleteExpenseResponse = zod.object({
 export const ListCategoriesResponseItem = zod.object({
   "id": zod.number(),
   "name": zod.string(),
+  "nameEn": zod.string().nullish(),
   "icon": zod.string(),
   "color": zod.string().nullish(),
   "isDefault": zod.boolean(),
@@ -203,8 +204,34 @@ export const ListCategoriesResponse = zod.array(ListCategoriesResponseItem)
  */
 export const CreateCategoryBody = zod.object({
   "name": zod.string(),
+  "nameEn": zod.string().optional(),
   "icon": zod.string(),
   "color": zod.string().optional()
+})
+
+
+/**
+ * @summary Update a custom category
+ */
+export const UpdateCategoryParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateCategoryBody = zod.object({
+  "name": zod.string(),
+  "nameEn": zod.string().optional(),
+  "icon": zod.string(),
+  "color": zod.string().optional()
+})
+
+export const UpdateCategoryResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "nameEn": zod.string().nullish(),
+  "icon": zod.string(),
+  "color": zod.string().nullish(),
+  "isDefault": zod.boolean(),
+  "clerkUserId": zod.string().nullish()
 })
 
 

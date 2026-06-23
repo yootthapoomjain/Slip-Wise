@@ -19,6 +19,7 @@ import Budgets from "@/pages/Budgets";
 import Goals from "@/pages/Goals";
 import Settings from "@/pages/Settings";
 import Premium from "@/pages/Premium";
+import Categories from "@/pages/Categories";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -146,6 +147,9 @@ function ClerkProviderWithRoutes() {
           </Route>
           <Route path="/premium">
             <AppLayout><Premium /></AppLayout>
+          </Route>
+          <Route path="/categories">
+            <AppLayout><Categories /></AppLayout>
           </Route>
           <Route>
             <AppLayout>
