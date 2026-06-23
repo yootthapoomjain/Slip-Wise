@@ -245,6 +245,41 @@ export interface Translations {
     editBeforeSave: string;
     scannedFrom: string;
   };
+  scanner: {
+    title: string;
+    tapToSelect: string;
+    orTakePhoto: string;
+    scanning: string;
+    scanComplete: string;
+    nothingDetected: string;
+    tryAgain: string;
+    addAsExpense: string;
+    scanAnother: string;
+    merchant: string;
+    amount: string;
+    date: string;
+    bank: string;
+    reference: string;
+    sender: string;
+    receiver: string;
+    processingTip: string;
+    tips: string;
+    tip1: string;
+    tip2: string;
+    tip3: string;
+  };
+  expenseDetail: {
+    title: string;
+    paymentMethod: string;
+    note: string;
+    category: string;
+    receipt: string;
+    noReceipt: string;
+    createdAt: string;
+    confirmDelete: string;
+    confirmDeleteDesc: string;
+    editExpense: string;
+  };
 }
 
 const th: Translations = {
@@ -492,6 +527,41 @@ const th: Translations = {
     editBeforeSave: "ตรวจสอบข้อมูลก่อนบันทึก",
     scannedFrom: "สแกนจาก",
   },
+  scanner: {
+    title: "สแกนสลิป",
+    tapToSelect: "แตะเพื่อเลือกภาพ",
+    orTakePhoto: "หรือถ่ายภาพ",
+    scanning: "กำลังสแกน...",
+    scanComplete: "สแกนสำเร็จ",
+    nothingDetected: "ไม่พบข้อมูล",
+    tryAgain: "ลองใหม่อีกครั้ง",
+    addAsExpense: "บันทึกเป็นรายจ่าย",
+    scanAnother: "สแกนใหม่",
+    merchant: "ร้านค้า",
+    amount: "จำนวนเงิน",
+    date: "วันที่",
+    bank: "ธนาคาร",
+    reference: "เลขอ้างอิง",
+    sender: "ผู้โอน",
+    receiver: "ผู้รับ",
+    processingTip: "กำลังประมวลผลภาพ...",
+    tips: "เคล็ดลับ",
+    tip1: "ถ่ายภาพให้ชัดเจนและไม่สั่น",
+    tip2: "ให้แสงสว่างเพียงพอ",
+    tip3: "ถ่ายให้ครบทุกส่วนของสลิป",
+  },
+  expenseDetail: {
+    title: "รายละเอียด",
+    paymentMethod: "ช่องทางการชำระ",
+    note: "หมายเหตุ",
+    category: "หมวดหมู่",
+    receipt: "ใบเสร็จ",
+    noReceipt: "ไม่มีใบเสร็จ",
+    createdAt: "บันทึกเมื่อ",
+    confirmDelete: "ยืนยันการลบ",
+    confirmDeleteDesc: "คุณต้องการลบรายจ่ายนี้ใช่ไหม?",
+    editExpense: "แก้ไขรายจ่าย",
+  },
 };
 
 const en: Translations = {
@@ -738,6 +808,41 @@ const en: Translations = {
     reference: "Reference No.",
     editBeforeSave: "Review before saving",
     scannedFrom: "Scanned from",
+  },
+  scanner: {
+    title: "Scan Slip",
+    tapToSelect: "Tap to select image",
+    orTakePhoto: "or take a photo",
+    scanning: "Scanning...",
+    scanComplete: "Scan complete",
+    nothingDetected: "Nothing detected",
+    tryAgain: "Try again",
+    addAsExpense: "Add as Expense",
+    scanAnother: "Scan another",
+    merchant: "Merchant",
+    amount: "Amount",
+    date: "Date",
+    bank: "Bank",
+    reference: "Reference",
+    sender: "Sender",
+    receiver: "Receiver",
+    processingTip: "Processing image...",
+    tips: "Tips",
+    tip1: "Keep the camera steady",
+    tip2: "Ensure good lighting",
+    tip3: "Capture the full slip",
+  },
+  expenseDetail: {
+    title: "Details",
+    paymentMethod: "Payment Method",
+    note: "Note",
+    category: "Category",
+    receipt: "Receipt",
+    noReceipt: "No receipt attached",
+    createdAt: "Recorded on",
+    confirmDelete: "Confirm Delete",
+    confirmDeleteDesc: "Are you sure you want to delete this expense?",
+    editExpense: "Edit Expense",
   },
 };
 

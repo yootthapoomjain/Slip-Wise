@@ -12,6 +12,7 @@ import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import Dashboard from "@/pages/Dashboard";
 import Expenses from "@/pages/Expenses";
+import ExpenseDetail from "@/pages/ExpenseDetail";
 import NewExpense from "@/pages/NewExpense";
 import EditExpense from "@/pages/EditExpense";
 import Reports from "@/pages/Reports";
@@ -20,6 +21,7 @@ import Goals from "@/pages/Goals";
 import Settings from "@/pages/Settings";
 import Premium from "@/pages/Premium";
 import Categories from "@/pages/Categories";
+import Scanner from "@/pages/Scanner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -132,6 +134,12 @@ function ClerkProviderWithRoutes() {
           </Route>
           <Route path="/expenses/:id/edit">
             <AppLayout><EditExpense /></AppLayout>
+          </Route>
+          <Route path="/expenses/:id">
+            <AppLayout><ExpenseDetail /></AppLayout>
+          </Route>
+          <Route path="/scan">
+            <AppLayout><Scanner /></AppLayout>
           </Route>
           <Route path="/reports">
             <AppLayout><Reports /></AppLayout>

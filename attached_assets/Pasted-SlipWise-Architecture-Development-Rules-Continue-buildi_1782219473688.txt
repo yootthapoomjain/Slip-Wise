@@ -1,0 +1,329 @@
+SlipWise – Architecture & Development Rules
+
+Continue building the application.
+
+This is Phase 2.
+
+⸻
+
+Project Structure
+
+/src
+
+/components
+
+/pages
+
+/features
+
+/hooks
+
+/lib
+
+/services
+
+/context
+
+/types
+
+/utils
+
+/assets
+
+⸻
+
+Pages
+
+Landing Page
+
+Login
+
+Register
+
+Forgot Password
+
+Dashboard
+
+Expense List
+
+Add Expense
+
+Expense Detail
+
+Reports
+
+Budgets
+
+Goals
+
+Scanner
+
+Settings
+
+Profile
+
+404
+
+⸻
+
+Bottom Navigation
+
+Dashboard
+
+Expenses
+
+Scan
+
+Reports
+
+Settings
+
+Use floating center Scan button.
+
+⸻
+
+OCR Flow
+
+1. Select image from gallery
+2. Compress image automatically
+3. Detect receipt boundaries if possible
+4. OCR using Tesseract.js
+5. Extract
+
+Merchant
+
+Amount
+
+Date
+
+Time
+
+Reference Number
+
+Payment Method
+
+6. Show editable preview
+7. Save into Supabase
+8. Upload receipt image to Storage
+
+⸻
+
+AI Extraction
+
+Use regex after OCR.
+
+Recognize Thai receipts.
+
+Recognize English receipts.
+
+Support:
+
+PromptPay
+
+QR Payment
+
+Visa
+
+Mastercard
+
+Cash
+
+Bank Transfer
+
+Extract amount accurately.
+
+Ignore duplicate numbers.
+
+⸻
+
+Expense Card
+
+Receipt thumbnail
+
+Merchant
+
+Category
+
+Amount
+
+Payment Method
+
+Date
+
+Swipe left
+
+Delete
+
+Swipe right
+
+Edit
+
+Tap to open details.
+
+⸻
+
+Dashboard Widgets
+
+Monthly Spending Card
+
+Weekly Spending
+
+Today’s Spending
+
+Remaining Budget
+
+Expense Trend
+
+Category Pie Chart
+
+Recent Transactions
+
+Budget Progress
+
+Savings Goal
+
+⸻
+
+Reports
+
+Interactive Charts
+
+Daily
+
+Weekly
+
+Monthly
+
+Yearly
+
+Filter by category
+
+Filter by payment method
+
+Export PDF
+
+Export Excel
+
+Export CSV
+
+⸻
+
+UX Rules
+
+One-handed navigation
+
+Apple Human Interface inspired
+
+Minimal
+
+Fast
+
+Smooth animation
+
+No lag
+
+Use Framer Motion
+
+Page transitions
+
+Skeleton loading
+
+Pull to refresh
+
+Haptic feedback where available
+
+⸻
+
+Forms
+
+React Hook Form
+
+Zod Validation
+
+Inline validation
+
+Auto focus
+
+Auto save draft
+
+⸻
+
+Performance
+
+Lazy load routes
+
+Memoize expensive components
+
+Compress uploaded images
+
+Virtualized expense list
+
+Optimized queries
+
+Offline cache
+
+PWA support
+
+Lighthouse >95
+
+⸻
+
+Security
+
+Never expose Supabase keys.
+
+Use environment variables.
+
+Enable Row Level Security.
+
+Validate every input.
+
+Escape HTML.
+
+Prevent XSS.
+
+Prevent SQL Injection.
+
+⸻
+
+Code Quality
+
+Use reusable components.
+
+No duplicated code.
+
+Strict TypeScript.
+
+Clean architecture.
+
+Feature-based folders.
+
+Readable naming.
+
+Comments only where necessary.
+
+No placeholder code.
+
+No TODO comments.
+
+Everything should work.
+
+⸻
+
+Final Requirement
+
+Generate a fully working production-ready application.
+
+Every page must be connected.
+
+Every button must function.
+
+Every database query must work.
+
+Every form must validate.
+
+Every route must exist.
+
+Every feature must be usable.
+
+The project should be deployable immediately on Replit with minimal configuration.
